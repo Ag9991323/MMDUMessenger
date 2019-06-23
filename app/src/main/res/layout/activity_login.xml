@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity">
+<TextView
+    android:id="@+id/Login"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Login"
+    android:textSize="25dp"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="40dp"/>
+
+    <EditText
+        android:id="@+id/emailEt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:hint="Email"
+        android:textSize="20dp"
+        android:layout_below="@id/Login"
+        android:layout_marginTop="150dp"/>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/etPasswordLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/emailEt"
+        app:passwordToggleEnabled="true"
+        >
+
+
+        <EditText
+            android:id="@+id/passwordEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:textSize="20dp"
+            android:layout_marginTop="25dp" />
+    </android.support.design.widget.TextInputLayout>
+    <Button
+        android:id="@+id/loginBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:background="@drawable/custom_buttons"
+        android:ems="10"
+        android:layout_centerHorizontal="true"
+        android:textSize="15dp"
+        android:layout_below="@id/etPasswordLayout"
+        android:layout_marginTop="25dp"/>
+    <TextView
+        android:id="@+id/forgetPasswordTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Forget Password ?"
+        android:textSize="20dp"
+       android:layout_centerHorizontal="true"
+        android:layout_below="@id/loginBtn"
+        android:layout_marginTop="15dp"
+        />
+
+   <TextView
+       android:id="@+id/notRegisterTv"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="Don't have an account? Register"
+       android:textSize="20dp"
+       android:layout_below="@id/forgetPasswordTv"
+       android:layout_centerHorizontal="true"
+       android:layout_marginTop="15dp"/>
+</RelativeLayout>

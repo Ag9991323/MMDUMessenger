@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginLeft="80dp"
+    android:orientation="vertical">
+
+
+        <!--<de.hdodenhof.circleimageview.CircleImageView-->
+            <!--android:id="@+id/chatDp"-->
+            <!--android:layout_width="50dp"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:src="@drawable/ic_profile_picture"-->
+            <!--android:visibility="gone"/>-->
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_gravity="end"
+    android:background="@drawable/bg_sender"
+    android:paddingBottom="5dp">
+    <TextView
+        android:id="@+id/chatMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="His Message"
+        android:paddingRight="15dp"
+        android:paddingLeft="15dp"
+        android:textSize="20sp"
+       />
+
+
+
+
+    <TextView
+        android:id="@+id/timeStamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="2dp"
+        android:paddingRight="15dp"
+        android:paddingLeft="15dp"
+        android:textSize="10dp"
+        android:text="09/06/2019 04:15 PM"/>
+
+</LinearLayout>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/isSeen"
+        android:layout_gravity="end"
+        android:layout_marginTop="2dp"
+        android:text="Delivered"
+        android:textAlignment="textEnd"
+        android:paddingRight="15dp"/>
+
+</LinearLayout>

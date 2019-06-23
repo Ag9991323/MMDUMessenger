@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+<ImageView
+    android:id="@+id/logo_mmduIv"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:src="@drawable/logo_mmdu"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="80dp"
+    android:scaleType="centerCrop"/>
+   <RadioGroup
+       android:id="@+id/radioGroup"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_below="@id/logo_mmduIv"
+       android:orientation="horizontal"
+       android:layout_marginTop="40dp"
+       android:layout_centerHorizontal="true">
+       <RadioButton
+           android:id="@+id/radioStudent"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="Student"
+           android:textSize="15dp"
+           android:checked="true"
+           />
+       <RadioButton
+           android:id="@+id/radioTeacher"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="Teacher"
+           android:checked="false"
+         />
+   </RadioGroup>
+
+    <Button
+        android:id="@+id/registerBtn"
+        android:layout_width="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content"
+        android:text="Register"
+
+        android:background="@drawable/custom_buttons"
+        android:textSize="15dp"
+        android:layout_below="@id/radioGroup"
+        android:layout_marginTop="25dp"/>
+
+    <Button
+        android:id="@+id/loginBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:background="@drawable/custom_buttons"
+        android:ems="10"
+        android:layout_centerHorizontal="true"
+        android:textSize="15dp"
+        android:layout_below="@id/registerBtn"
+        android:layout_marginTop="25dp"/>
+
+
+
+</RelativeLayout>
