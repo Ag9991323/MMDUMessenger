@@ -307,6 +307,13 @@ public class teacherDashboard extends AppCompatActivity implements NavigationVie
                     ft3.commit();
                     return true;
 
+                case R.id.Profile:
+                    ProfileFragment fragment4 = new ProfileFragment();
+                    FragmentTransaction ft4 = getSupportFragmentManager().beginTransaction();
+                    ft4.replace(R.id.Frame, fragment4, "");
+                    ft4.commit();
+                    return true;
+
 
             }
             return false;
@@ -359,8 +366,10 @@ public class teacherDashboard extends AppCompatActivity implements NavigationVie
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.action_search:
-                return false;
+            case R.id.action_add_post:
+                startActivity(new Intent(teacherDashboard.this,AddPostActivity.class));
+                finish();
+                return true;
             default:
                 break;
         }

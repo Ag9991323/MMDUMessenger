@@ -281,6 +281,10 @@ public class ChatsFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        //hide post from this menu
+        if(menu.findItem(R.id.action_add_post)!=null){
+            menu.findItem(R.id.action_add_post).setVisible(false);
+        }
         MenuItem searchitem=menu.findItem(R.id.action_search);
         SearchView searchview=(SearchView)searchitem.getActionView();
 
@@ -292,8 +296,12 @@ public class ChatsFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                adapter.getFilter().filter(s);
-                return false;
+                if(usersList.size()!=0){
+                    adapter.getFilter().filter(s);
+                    return false;
+                }
+                return  false;
+
             }
         });
     }

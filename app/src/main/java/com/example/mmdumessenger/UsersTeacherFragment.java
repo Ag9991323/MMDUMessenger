@@ -221,6 +221,8 @@ public class UsersTeacherFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        //hide post from this menu
+        menu.findItem(R.id.action_add_post).setVisible(false);
         MenuItem searchitem=menu.findItem(R.id.action_search);
         SearchView searchview=(SearchView)searchitem.getActionView();
 

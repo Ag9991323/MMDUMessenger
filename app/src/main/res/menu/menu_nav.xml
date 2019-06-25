@@ -3,4 +3,5 @@
     <item android:id="@+id/home" android:title="Home" android:icon="@drawable/ic_home"></item>
     <item android:id="@+id/chats" android:title="Chats" android:icon="@drawable/ic_chats"></item>
     <item android:id="@+id/users" android:title="Users" android:icon="@drawable/ic_users"></item>
+    <item android:id="@+id/profile" android:title="Profile" android:icon="@drawable/ic_account"></item>
 </menu>

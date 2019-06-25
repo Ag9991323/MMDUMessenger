@@ -6,5 +6,10 @@
         app:showAsAction="ifRoom|collapseActionView"
         android:icon="@drawable/ic_search"
         app:actionViewClass="android.support.v7.widget.SearchView"></item>
+    <item android:id="@+id/action_add_post"
+        android:title="Add Post"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_add_post"/>
+
 
 </menu>

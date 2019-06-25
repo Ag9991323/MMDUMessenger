@@ -331,6 +331,14 @@ public class studentDashboard extends AppCompatActivity  implements   Navigation
                     ft3.commit();
                     return true;
 
+                case R.id.Profile:
+                   ProfileFragment fragment4 = new ProfileFragment();
+                    FragmentTransaction ft4 = getSupportFragmentManager().beginTransaction();
+                    ft4.replace(R.id.Frame, fragment4, "");
+                    ft4.commit();
+                    return true;
+
+
 
             }
             return false;
@@ -348,6 +356,10 @@ public class studentDashboard extends AppCompatActivity  implements   Navigation
                 reference.updateChildren(isoffline);
                 checkUser();
                 return true;
+
+            case R.id.Profile:
+                startActivity(new Intent(studentDashboard.this,ProfileActivity.class));
+                finish();
 
             default:
                 return false;
@@ -386,7 +398,7 @@ public class studentDashboard extends AppCompatActivity  implements   Navigation
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater=getMenuInflater();
-        menuInflater.inflate(R.menu.searchmenu,menu);
+        menuInflater.inflate(R.menu.studentmenu,menu);
 
         return  true;
     }

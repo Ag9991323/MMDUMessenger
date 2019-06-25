@@ -17,6 +17,9 @@ import com.bumptech.glide.Glide;
 import com.example.mmdumessenger.ChatActivity;
 import com.example.mmdumessenger.R;
 import com.example.mmdumessenger.models.Users;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,23 +50,35 @@ public class UsersAdapter  extends RecyclerView.Adapter<UsersAdapter.myholder> i
     }
 
     @Override
-    public void onBindViewHolder(@NonNull myholder myholder, int i) {
+    public void onBindViewHolder(@NonNull final myholder myholder, int i) {
         final String hisUid=usersList.get(i).getUid();
         String Name = usersList.get(i).getName();
-        String Image = usersList.get(i).getImage();
+        final String Image = usersList.get(i).getImage();
 
 
         myholder.userName.setText(Name);
         if(!TextUtils.isEmpty(Image)){
             try{
 
-                Glide.with(mContext).asBitmap().load(Image).into(myholder.userImage);
+//
+                Picasso.get().load(Image).networkPolicy(NetworkPolicy.OFFLINE).into(myholder.userImage, new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Picasso.get().load(Image).into(myholder.userImage);
+
+                    }
+                });
 
                 // Picasso.get().load(Image).into(myholder.userImage);
             }
             catch (Exception e){
 
-                Glide.with(mContext).asBitmap().load(R.drawable.ic_profile).into(myholder.userImage);
+               Picasso.get().load(R.drawable.ic_profile).into(myholder.userImage);
                 //Picasso.get().load(R.drawable.ic_profile).into(myholder.userImage);
             }
 
