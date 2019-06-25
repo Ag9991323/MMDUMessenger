@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="2dp"
+    tools:context=".AddPostActivity">
+
+<EditText
+    android:id="@+id/postTitleEt"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/editextstyle"
+    android:hint="Title"
+    android:padding="10dp"
+    android:layout_marginTop="15dp"
+    android:singleLine="true"
+    />
+  <ImageView
+      android:id="@+id/postImageIv"
+      android:layout_width="match_parent"
+      android:layout_height="300dp"
+      android:scaleType="centerCrop"
+      android:paddingTop="10dp"
+      android:layout_below="@id/postTitleEt"
+      android:src="@drawable/ic_add_a_photo_black_24dp"
+      />
+
+  <EditText
+      android:id="@+id/postDescriptionEt"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:hint="Enter Description"
+      android:layout_below="@id/postImageIv"
+      android:padding="10dp"
+      android:background="@drawable/editextstyle"
+      android:gravity="start"
+      android:minHeight="100dp"
+      android:inputType="textCapSentences|textMultiLine"/>
+
+  <Button
+      android:id="@+id/postUploadBtn"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="@drawable/custom_buttons"
+      android:text="Upload"
+      android:textSize="18dp"
+      android:layout_gravity="end"
+      android:layout_marginTop="20dp"
+      android:layout_below="@id/postDescriptionEt"
+      android:layout_centerHorizontal="true"/>
+</RelativeLayout>
