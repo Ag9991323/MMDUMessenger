@@ -84,7 +84,7 @@ public class PostAdapter  extends RecyclerView.Adapter<PostAdapter.holder>{
 
         } else {
             try {
-                Picasso.get().load(postImage).fit().centerCrop().networkPolicy(NetworkPolicy.OFFLINE).into(holder.postImageIv, new Callback() {
+                Picasso.get().load(postImage).fit().centerCrop(300).networkPolicy(NetworkPolicy.OFFLINE).into(holder.postImageIv, new Callback() {
                     @Override
                     public void onSuccess() {
 
@@ -92,7 +92,7 @@ public class PostAdapter  extends RecyclerView.Adapter<PostAdapter.holder>{
 
                     @Override
                     public void onError(Exception e) {
-                        Picasso.get().load(postImage).into(holder.postImageIv);
+                        Picasso.get().load(postImage).fit().centerCrop(300).into(holder.postImageIv);
 
                     }
                 });

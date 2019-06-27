@@ -108,7 +108,7 @@ public class UsersStudentFragment extends Fragment {
                     }catch (Exception e){
                         e.printStackTrace();
                     }
-                    adapter = new UsersAdapter(getActivity(), usersList,studentUser.getOnline());
+                    adapter = new UsersAdapter(getActivity(), usersList,true);
                     user_recycle_view.setAdapter(adapter);
 
                 }

@@ -9,10 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.mmdumessenger.Adapter.PostAdapter;
 import com.example.mmdumessenger.models.Posts;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,6 +30,7 @@ public class HomeFragment extends Fragment {
 
     RecyclerView recyclerView;
     List<Posts> postslist;
+    FirebaseAuth mAuth;
 
     PostAdapter postAdapter;
 
@@ -44,6 +45,7 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_home, container, false);
+        mAuth=FirebaseAuth.getInstance();
 
         recyclerView=view.findViewById(R.id.recycleView);
         LinearLayoutManager linearLayoutManager= new LinearLayoutManager(getActivity());
@@ -78,10 +80,31 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getActivity(),""+databaseError.getMessage(),Toast.LENGTH_SHORT).show();
+
 
             }
         });
     }
+
+
+    @Override
+    public  void onStart() {
+        super.onStart();
+
+//        if(usersStudentAdapter!=null){
+//           usersStudentAdapter.startListening();
+//        }
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+//        if(usersStudentAdapter!=null){
+//            usersStudentAdapter.stopListening();
+//        }
+
+    }
+
 
 }

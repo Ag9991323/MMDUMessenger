@@ -7,8 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -21,7 +19,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Display;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +26,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -42,7 +41,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -57,6 +58,7 @@ public class AddPostActivity extends AppCompatActivity {
     EditText postTitleEt,postDescriptionEt;
     Button updatePostbtn;
     ImageView postImageIv;
+    private StorageTask uploadTask;
 
 
     //permission constant
@@ -169,7 +171,7 @@ public class AddPostActivity extends AppCompatActivity {
        final String saveCurrentDate = currentDate.format(calFor.getTime());
 
 
-        java.text.SimpleDateFormat currentTime =new java.text.SimpleDateFormat("hh:mm:ss");
+        java.text.SimpleDateFormat currentTime =new java.text.SimpleDateFormat("hh:mm:ss a");
        final String saveCurrentTime = currentTime.format(calFor.getTime());
 
        final String postRandomName = saveCurrentDate + saveCurrentTime;
@@ -187,62 +189,128 @@ public class AddPostActivity extends AppCompatActivity {
             //here you can choose quality factor in third parameter(ex. i choosen 25)
             bmp.compress(Bitmap.CompressFormat.JPEG, 25, baos);
             byte[] fileInBytes = baos.toByteArray();
-            StorageReference ref= FirebaseStorage.getInstance().getReference("PostImages").child(System.currentTimeMillis()+FileAndPathName+".jpg");
-             ref.putBytes(fileInBytes)
-                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            final StorageReference ref= FirebaseStorage.getInstance().getReference("PostImages").child(System.currentTimeMillis()+FileAndPathName+".jpg");
+             uploadTask =ref.putBytes(fileInBytes);
+                     uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                          @Override
-                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                             // image is posted on storage now get its url
-
-                             Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                             while(!uriTask.isSuccessful()){
-
-                                 if(uriTask.isSuccessful()){
-                                     String downloaduri=uriTask.getResult().toString();
-                                     // put image information
-                                     HashMap<String,Object> hashMap =new HashMap<>();
-                                     hashMap.put("name",name);
-                                     hashMap.put("uid",uid);
-                                     hashMap.put("email",email);
-                                     hashMap.put("dp",dp);
-                                     hashMap.put("postImage",downloaduri);
-                                     hashMap.put("title",title);
-                                     hashMap.put("description",description);
-                                     hashMap.put("date",saveCurrentDate);
-                                     hashMap.put("time",saveCurrentTime);
-
-                                     DatabaseReference reference= FirebaseDatabase.getInstance().getReference("Posts");
-                                     reference.child(uid+postRandomName).setValue(hashMap)
-                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                 @Override
-                                                 public void onSuccess(Void aVoid) {
-                                                     pd.dismiss();
-                                                     Toast.makeText(getApplicationContext(),"Post Pubished",Toast.LENGTH_SHORT).show();
-                                                     //reset views
-                                                     postImageIv.setImageURI(null);
-                                                     postTitleEt.setText("");
-                                                     postDescriptionEt.setText("");
-                                                     images_uri=null;
-
-                                                 }
-                                             }).addOnFailureListener(new OnFailureListener() {
-                                         @Override
-                                         public void onFailure(@NonNull Exception e) {
-                                             //failed adding post in database
-                                             pd.dismiss();
-                                             Toast.makeText(getApplicationContext(),""+e.getMessage(),Toast.LENGTH_SHORT).show();
-                                         }
-                                     });
-                                 }
+                         public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                             if(!task.isSuccessful()){
+                                 throw  task.getException();
+                             }
+                             else{
+                                 return  ref.getDownloadUrl();
                              }
                          }
-                     }).addOnFailureListener(new OnFailureListener() {
+                     }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                  @Override
-                 public void onFailure(@NonNull Exception e) {
-                     pd.dismiss();
-                     Toast.makeText(getApplicationContext(),""+e.getMessage(),Toast.LENGTH_SHORT).show();
-                 }
-             });
+                 public void onComplete(@NonNull Task<Uri> task) {
+                     if (task.isSuccessful()) {
+                         Uri downloadUri = task.getResult();
+                         String mUri = downloadUri.toString();
+
+                         // put image information
+                         HashMap<String, Object> hashMap = new HashMap<>();
+                         hashMap.put("name", name);
+                         hashMap.put("uid", uid);
+                         hashMap.put("email", email);
+                         hashMap.put("dp", dp);
+                         hashMap.put("postImage", mUri);
+                         hashMap.put("title", title);
+                         hashMap.put("description", description);
+                         hashMap.put("date", saveCurrentDate);
+                         hashMap.put("time", saveCurrentTime);
+
+                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
+                         reference.child(uid + postRandomName).setValue(hashMap)
+                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                     @Override
+                                     public void onSuccess(Void aVoid) {
+                                         pd.dismiss();
+                                         startActivity(new Intent(AddPostActivity.this,teacherDashboard.class));
+                                         finish();
+                                         Toast.makeText(getApplicationContext(), "Post Pubished", Toast.LENGTH_SHORT).show();
+                                         //reset views
+                                         postImageIv.setImageURI(null);
+                                         postTitleEt.setText("");
+                                         postDescriptionEt.setText("");
+                                         images_uri = null;
+                                     }
+
+                                 }).addOnFailureListener(new OnFailureListener() {
+                             @Override
+                             public void onFailure(@NonNull Exception e) {
+                                 //failed adding post in database
+                                 pd.dismiss();
+                                 Toast.makeText(getApplicationContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                             }
+                         });
+                     } else {
+                         Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+                         pd.dismiss();
+                     }
+                 }}).addOnFailureListener(new OnFailureListener() {
+                         @Override
+                         public void onFailure(@NonNull Exception e) {
+                             Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
+                             pd.dismiss();
+                         }
+                     });
+//                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                         @Override
+//                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                             // image is posted on storage now get its url
+//
+//                             Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+//                             while(!uriTask.isSuccessful()){
+//
+//
+//                                 if(uriTask.isSuccessful()){
+//                                     String downloaduri=uriTask.getResult().toString();
+//
+//                                     // put image information
+//                                     HashMap<String,Object> hashMap =new HashMap<>();
+//                                     hashMap.put("name",name);
+//                                     hashMap.put("uid",uid);
+//                                     hashMap.put("email",email);
+//                                     hashMap.put("dp",dp);
+//                                     hashMap.put("postImage",downloaduri);
+//                                     hashMap.put("title",title);
+//                                     hashMap.put("description",description);
+//                                     hashMap.put("date",saveCurrentDate);
+//                                     hashMap.put("time",saveCurrentTime);
+//
+//                                     DatabaseReference reference= FirebaseDatabase.getInstance().getReference("Posts");
+//                                     reference.child(uid+postRandomName).setValue(hashMap)
+//                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                                 @Override
+//                                                 public void onSuccess(Void aVoid) {
+//                                                     pd.dismiss();
+//                                                     Toast.makeText(getApplicationContext(),"Post Pubished",Toast.LENGTH_SHORT).show();
+//                                                     //reset views
+//                                                     postImageIv.setImageURI(null);
+//                                                     postTitleEt.setText("");
+//                                                     postDescriptionEt.setText("");
+//                                                     images_uri=null;
+//
+//                                                 }
+//                                             }).addOnFailureListener(new OnFailureListener() {
+//                                         @Override
+//                                         public void onFailure(@NonNull Exception e) {
+//                                             //failed adding post in database
+//                                             pd.dismiss();
+//                                             Toast.makeText(getApplicationContext(),""+e.getMessage(),Toast.LENGTH_SHORT).show();
+//                                         }
+//                                     });
+//                                 }
+//                             }
+//                         }
+//                     }).addOnFailureListener(new OnFailureListener() {
+//                 @Override
+//                 public void onFailure(@NonNull Exception e) {
+//                     pd.dismiss();
+//                     Toast.makeText(getApplicationContext(),""+e.getMessage(),Toast.LENGTH_SHORT).show();
+//                 }
+//             });
         }
         else{
             //without image
@@ -264,7 +332,10 @@ public class AddPostActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Void aVoid) {
                             pd.dismiss();
+                            startActivity(new Intent(AddPostActivity.this,teacherDashboard.class));
+                            finish();
                             Toast.makeText(getApplicationContext(),"Post Pubished",Toast.LENGTH_SHORT).show();
+
                             //reset views
                             postImageIv.setImageResource(R.drawable.ic_add_a_photo_black_24dp);
                             postTitleEt.setText("");
@@ -429,28 +500,12 @@ public class AddPostActivity extends AppCompatActivity {
             if(requestCode==Image_pick_gallery_code){
                 images_uri=data.getData();
 
-                postImageIv.setImageURI(images_uri);
+                Picasso.get().load(images_uri.toString()).fit().centerCrop().into(postImageIv);
 
             }
             else if(requestCode ==Image_pick_camera_code){
                  Log.i("error---",images_uri.toString());
-
-                Bitmap myBitmap = BitmapFactory.decodeFile(images_uri.getLastPathSegment());
-                Display display = getWindowManager().getDefaultDisplay();
-                Point size = new Point();
-                display.getSize(size);
-                int width = size.x;
-                int height = size.y;
-                Log.e("Screen width ", " "+width);
-                Log.e("Screen height ", " "+height);
-                Log.e("img width ", " "+myBitmap.getWidth());
-                Log.e("img height ", " "+myBitmap.getHeight());
-                float scaleHt =(float) width/myBitmap.getWidth();
-                Log.e("Scaled percent ", " "+scaleHt);
-                Bitmap scaled = Bitmap.createScaledBitmap(myBitmap, width, (int)(myBitmap.getWidth()*scaleHt), true);
-                postImageIv.setImageBitmap(scaled);
-
-                //postImageIv.setImageURI(images_uri);
+                Picasso.get().load(images_uri.toString()).fit().centerCrop().into(postImageIv);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
